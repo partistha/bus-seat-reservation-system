@@ -1,52 +1,75 @@
-# Prerequisites
-*.d
+c
+CopyEdit
+#include <stdio.h>
+#include <string.h>
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+struct Bus {
+    char bus_no[10];
+    char driver[20];
+    char arrival[10];
+    char departure[10];
+    char from[20];
+    char to[20];
+    char seats[8][4][10]; // 8 rows, 4 seats per row (seating arrangement)
+};
 
-# Linker output
-*.ilk
-*.map
-*.exp
+struct Bus bus[10];  // Array to hold data for 10 buses
+int bus_count = 0;   // Keeps track of the number of buses
 
-# Precompiled Headers
-*.gch
-*.pch
+void installBus() {
+    printf("Enter bus number: ");
+    scanf("%s", bus[bus_count].bus_no);
+    printf("Enter driver's name: ");
+    scanf("%s", bus[bus_count].driver);
+    printf("Enter arrival time: ");
+    scanf("%s", bus[bus_count].arrival);
+    printf("Enter departure time: ");
+    scanf("%s", bus[bus_count].departure);
+    printf("Enter starting point: ");
+    scanf("%s", bus[bus_count].from);
+    printf("Enter destination: ");
+    scanf("%s", bus[bus_count].to);
+    
+    // Initializing all seats to "Available"
+    for(int i = 0; i < 8; i++) {
+        for(int j = 0; j < 4; j++) {
+            strcpy(bus[bus_count].seats[i][j], "Available");
+        }
+    }
+    
+    bus_count++;  // Increment bus count after adding a bus
+    printf("Bus added successfully!\n");
+}
+Seat Reservation
+c
+CopyEdit
+void bookSeat() {
+    char bus_no[10];
+    int row, col;
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+    printf("Enter bus number: ");
+    scanf("%s", bus_no);
+    
+    // Find the bus
+    int bus_found = 0;
+    for(int i = 0; i < bus_count; i++) {
+        if(strcmp(bus[i].bus_no, bus_no) == 0) {
+            bus_found = 1;
+            printf("Bus found! Please select a seat.\n");
+            printf("Enter row (0-7) and column (0-3): ");
+            scanf("%d %d", &row, &col);
+            
+            // Check if the seat is available
+            if(strcmp(bus[i].seats[row][col], "Available") == 0) {
+                strcpy(bus[i].seats[row][col], "Booked");
+                printf("Seat booked successfully!\n");
+            } else {
+                printf("Seat is already booked!\n");
+            }
+            break;
+        }
+    }
+    if(!bus_found) {
+        printf("Bus number not found.\n");
+    }
+}
